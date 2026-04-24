@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | DCODE</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+
+    <!-- ✅ Shared stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ── About-specific styles ──────────────────────── */
+
+        /* Page hero */
+        .page-hero { margin-bottom: 3rem; animation: slideIn 0.9s ease-out forwards; }
+        .page-hero h1 { font-size: 2.6rem; color: var(--white); text-shadow: var(--text-shadow); margin-bottom: 0.8rem; }
+        .page-hero p  { font-size: 1.1rem; color: rgba(255,255,255,0.75); max-width: 650px; line-height: 1.7; }
+
+        /* About content grid */
+        .about-section { display: flex; flex-direction: column; align-items: center; margin: 2rem 0 4rem; }
+        .about-content  { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; width: 100%; max-width: 1200px; }
+
+        .about-text h3 { font-size: 1.9rem; margin-bottom: 1.2rem; color: var(--primary-blue); }
+        .about-text p  { color: rgba(255,255,255,0.8); line-height: 1.8; margin-bottom: 1.3rem; font-size: 1.05rem; }
+
+        /* Animated business card */
+        .business-card-container { perspective: 1200px; display: flex; align-items: center; justify-content: center; }
+        .business-card {
+            width: 100%; max-width: 400px;
+            background: rgba(30,30,30,0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.35), inset 0 0 18px rgba(0,168,255,0.15);
+            border: 1px solid rgba(0,168,255,0.2);
+            transform-style: preserve-3d;
+            animation: float 8s ease-in-out infinite;
+            overflow: hidden;
+            display: flex; flex-direction: column; gap: 1rem;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0)   rotateX(4deg)  rotateY(4deg);  }
+            50%      { transform: translateY(-18px) rotateX(-4deg) rotateY(-4deg); }
+        }
+        .business-card::before {
+            content: '';
+            position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: linear-gradient(to bottom right, rgba(0,168,255,0.08) 0%, transparent 50%, rgba(0,168,255,0.08) 100%);
+            animation: shine 7s linear infinite;
+            z-index: 0;
+        }
+        @keyframes shine {
+            0%   { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%)  rotate(45deg); }
+        }
+        .developer-header { display: flex; align-items: center; gap: 1.2rem; position: relative; z-index: 1; }
+        .developer-image  { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--primary-blue); box-shadow: var(--glow); object-fit: cover; background: rgba(0,168,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; flex-shrink: 0; }
+        .developer-name   { font-size: 1.7rem; color: var(--white); }
+        .developer-title  { font-size: 1rem; color: var(--primary-blue); font-weight: 600; }
+        .developer-divider{ height: 2px; background: rgba(0,168,255,0.25); border: none; box-shadow: var(--glow); position: relative; z-index: 1; }
+        .developer-info   { position: relative; z-index: 1; }
+        .developer-info p { color: rgba(255,255,255,0.8); line-height: 1.7; display: flex; align-items: flex-start; gap: 0.6rem; margin-bottom: 0.7rem; font-size: 0.95rem; }
+        .developer-info i { color: var(--primary-blue); min-width: 18px; margin-top: 3px; }
+        .portfolio-btn {
+            position: relative; z-index: 1; align-self: center;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.8rem 2rem; background: var(--primary-blue); color: #fff;
+            border-radius: 30px; text-decoration: none; font-weight: 600;
+            transition: var(--transition); box-shadow: var(--glow);
+        }
+        .portfolio-btn:hover { background: var(--light-blue); transform: translateY(-3px); }
+
+        /* Values */
+        .values-section { margin: 4rem 0; width: 100%; max-width: 1200px; }
+        .values-grid    { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 1.5rem; margin-top: 2.5rem; }
+        .value-card     { background: rgba(0,168,255,0.05); border: 1px solid rgba(0,168,255,0.12); border-radius: 16px; padding: 1.8rem; transition: var(--transition); }
+        .value-card:hover { transform: translateY(-4px); box-shadow: var(--glow); border-color: rgba(0,168,255,0.25); }
+        .value-icon     { font-size: 2rem; color: var(--primary-blue); margin-bottom: 1rem; text-shadow: var(--glow); }
+        .value-card h4  { font-size: 1.2rem; margin-bottom: 0.6rem; color: var(--white); }
+        .value-card p   { font-size: 0.95rem; color: rgba(255,255,255,0.75); line-height: 1.6; }
+
+        /* Team */
+        .team-section    { margin-top: 5rem; width: 100%; max-width: 1200px; }
+        .team-section h3 { font-size: 2rem; text-align: center; position: relative; color: var(--white); padding-bottom: 1.2rem; }
+        .team-section h3::after { content: ''; position: absolute; width: 80px; height: 3px; background: var(--primary-blue); bottom: 0; left: 50%; transform: translateX(-50%); border-radius: 3px; box-shadow: var(--glow); }
+
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 2rem; margin-top: 3rem; }
+        .team-member { background: rgba(30,30,30,0.6); backdrop-filter: blur(12px); border-radius: 16px; padding: 2rem; border: 1px solid rgba(0,168,255,0.1); text-align: center; transition: var(--transition); opacity: 0; transform: translateY(20px); animation: fadeInUp 0.6s forwards; }
+        .team-member:nth-child(1){ animation-delay: 0.1s; }
+        .team-member:nth-child(2){ animation-delay: 0.2s; }
+        .team-member:nth-child(3){ animation-delay: 0.3s; }
+        .team-member:nth-child(4){ animation-delay: 0.4s; }
+        .team-member:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,168,255,0.2); border-color: rgba(0,168,255,0.2); }
+        .team-avatar { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--primary-blue); box-shadow: var(--glow); margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center; font-size: 2.8rem; background: rgba(0,168,255,0.1); }
+        .team-member h4 { font-size: 1.2rem; margin-bottom: 0.4rem; color: var(--white); }
+        .team-member p  { color: var(--primary-blue); font-weight: 600; font-size: 0.95rem; }
+        .team-member .social-links { display: flex; justify-content: center; gap: 0.8rem; margin-top: 1.2rem; }
+        .team-member .social-links a { width: 34px; height: 34px; border-radius: 50%; background: rgba(0,168,255,0.1); border: 1px solid rgba(0,168,255,0.15); display: flex; align-items: center; justify-content: center; transition: var(--transition); color: var(--white); text-decoration: none; }
+        .team-member .social-links a:hover { background: rgba(0,168,255,0.25); transform: translateY(-3px); box-shadow: var(--glow); }
+
+        /* Responsive */
+        @media (max-width: 1100px) { .about-content { grid-template-columns: 1fr; max-width: 750px; } .business-card-container { margin-top: 2rem; } }
+        @media (max-width: 768px)  { .page-hero h1 { font-size: 2rem; } .developer-header { flex-direction: column; text-align: center; } }
+        @media (max-width: 576px)  { .business-card { padding: 1.6rem; } }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header>
+        <a href="index.html" class="logo"><span>&lt;/&gt;</span>DCODE</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html">    Home</a></li>
+                <li><a href="projects.html"> Projects</a></li>
+                <li><a href="contact.html">  Contact Us</a></li>
+                <li><a href="about.html" class="active">About Us</a></li>
+            </ul>
+        </nav>
+        <div class="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- ── Mobile Navigation ──────────────────────────────── -->
+    <nav class="mobile-nav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">    Home</a></li>
+            <li><a href="projects.html"> Projects</a></li>
+            <li><a href="contact.html">  Contact Us</a></li>
+            <li><a href="about.html" class="active">About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── Main Content ───────────────────────────────────── -->
+    <main>
+
+        <div class="page-hero">
+            <h1>About DCODE</h1>
+            <p>A passionate team of engineers, designers, and strategists building the digital future — one project at a time.</p>
+        </div>
+
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="about-content">
+
+                <!-- Text -->
+                <div class="about-text">
+                    <h3>Innovating Since 2020</h3>
+                    <p>DCODE was founded with a vision to bridge the gap between cutting-edge technology and real business needs. Based in Nairobi, Kenya, we serve clients locally and across the African continent and beyond.</p>
+                    <p>We specialise in creating custom web applications, mobile solutions, and enterprise software that drive business growth and enhance user engagement — delivered with speed, quality, and care.</p>
+                    <p>Our approach combines deep technical expertise with creative problem-solving to produce solutions that are both functionally powerful and visually stunning.</p>
+                    <a href="contact.html" class="btn-primary" style="width: fit-content; margin-top: 0.5rem;">
+                        <i class="fas fa-envelope"></i> Work With Us
+                    </a>
+                </div>
+
+                <!-- Animated business card -->
+                <div class="business-card-container">
+                    <div class="business-card">
+                        <div class="developer-header">
+                            <div class="developer-image">👨‍💻</div>
+                            <div>
+                                <div class="developer-name">Dave</div>
+                                <div class="developer-title">Founder &amp; Lead Developer</div>
+                            </div>
+                        </div>
+                        <hr class="developer-divider">
+                        <div class="developer-info">
+                            <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                            <p><i class="fas fa-envelope"></i> dcodedevs@gmail.com</p>
+                            <p><i class="fas fa-phone"></i> +254-768-372532</p>
+                            <p><i class="fas fa-code"></i> Full-Stack Developer · React · Node.js · Flutter</p>
+                            <p><i class="fas fa-award"></i> 4+ Years of Professional Experience</p>
+                        </div>
+                        <a href="projects.html" class="portfolio-btn">
+                            View Portfolio <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Values -->
+            <div class="values-section">
+                <h2 class="section-title">Our Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-bolt"></i></div>
+                        <h4>Speed &amp; Efficiency</h4>
+                        <p>We deliver fast without cutting corners — combining agile workflows with robust engineering practices.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-star"></i></div>
+                        <h4>Quality First</h4>
+                        <p>Every line of code is written with pride. We test thoroughly and deploy confidently.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-users"></i></div>
+                        <h4>Client-Centric</h4>
+                        <p>Your success is our success. We listen, advise, and build solutions tailored to your unique needs.</p>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-icon"><i class="fas fa-lightbulb"></i></div>
+                        <h4>Continuous Innovation</h4>
+                        <p>We stay ahead of trends so you can stay ahead of competition.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Section -->
+            <div class="team-section">
+                <h3>Meet the Team</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="team-avatar">👨‍💻</div>
+                        <h4>Dave</h4>
+                        <p>Founder &amp; Lead Developer</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="LinkedIn"><i class="icon ion-logo-linkedin"></i></a>
+                            <a href="#" aria-label="GitHub">  <i class="icon ion-logo-github"></i></a>
+                            <a href="#" aria-label="Twitter"> <i class="icon ion-logo-twitter"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-avatar">🎨</div>
+                        <h4>Design Lead</h4>
+                        <p>UI/UX Designer</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="LinkedIn"><i class="icon ion-logo-linkedin"></i></a>
+                            <a href="#" aria-label="Dribbble"><i class="fas fa-basketball-ball"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-avatar">📱</div>
+                        <h4>Mobile Dev</h4>
+                        <p>Flutter &amp; React Native</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="GitHub">  <i class="icon ion-logo-github"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="icon ion-logo-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-avatar">🔐</div>
+                        <h4>Security Lead</h4>
+                        <p>Cybersecurity Analyst</p>
+                        <div class="social-links">
+                            <a href="#" aria-label="LinkedIn"><i class="icon ion-logo-linkedin"></i></a>
+                            <a href="#" aria-label="Twitter"> <i class="icon ion-logo-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="icon ion-md-mail"></i> dcodedevs@gmail.com</p>
+                <p><i class="icon ion-md-call"></i> +254-768-372532</p>
+                <p><i class="icon ion-md-pin"></i>  Nairobi, Kenya</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">   <i class="icon ion-md-home"></i> Home</a>
+                <a href="projects.html"><i class="icon ion-md-code-working"></i> Projects</a>
+                <a href="contact.html"> <i class="icon ion-md-mail"></i> Contact Us</a>
+                <a href="about.html">   <i class="icon ion-md-information-circle"></i> About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"> <i class="icon ion-logo-facebook"></i></a>
+                    <a href="#" aria-label="Twitter">  <i class="icon ion-logo-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"> <i class="icon ion-logo-linkedin"></i></a>
+                    <a href="#" aria-label="GitHub">   <i class="icon ion-logo-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">&copy; <span id="year"></span> DCODE. All Rights Reserved.</div>
+    </footer>
+
+    <!-- ── Chatbot ─────────────────────────────────────────── -->
+    <button class="chatbot-btn" aria-label="Open chat assistant">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chatbot-container" role="dialog" aria-label="DCODE Chat Assistant">
+        <div class="chatbot-header">
+            <i class="fas fa-robot"></i>
+            <h3>DCODE Assistant</h3>
+            <button class="chatbot-close" aria-label="Close chat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Ask me anything…" autocomplete="off">
+            <button class="chatbot-send" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- ✅ Shared JS -->
+    <script src="main.js"></script>
+</body>
+</html>
