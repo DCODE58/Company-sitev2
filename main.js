@@ -8,8 +8,8 @@
 // Replace these two values with your real bot token and chat id.
 // The bot token is obtained from @BotFather on Telegram.
 // The chat id is obtained by messaging @userinfobot on Telegram.
-const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE';
-const TELEGRAM_CHAT_ID   = 'YOUR_CHAT_ID_HERE';
+const TELEGRAM_BOT_TOKEN = '8272930317:AAFPA2juBhRqJQlrQe9OhDw_OvsH8NTk9PI';
+const TELEGRAM_CHAT_ID   = '5450924020';
 
 /**
  * sendToTelegram
