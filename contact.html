@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | DCODE</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
+
+    <!-- ✅ Shared stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ── Contact-specific styles ─────────────────────── */
+
+        .page-hero { margin-bottom: 3rem; animation: slideIn 0.9s ease-out forwards; }
+        .page-hero h1 { font-size: 2.6rem; color: var(--white); text-shadow: var(--text-shadow); margin-bottom: 0.8rem; }
+        .page-hero p  { font-size: 1.1rem; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 600px; }
+
+        /* Two-column layout */
+        .contact-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        /* Info side */
+        .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+        .contact-info h2 { font-size: 2rem; color: var(--white); text-shadow: var(--text-shadow); position: relative; padding-bottom: 0.8rem; margin-bottom: 0.5rem; }
+        .contact-info h2::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: var(--primary-blue); border-radius: 3px; box-shadow: var(--glow); }
+
+        .contact-method {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(90,198,252,0.07);
+            transition: var(--transition);
+            opacity: 0; transform: translateY(18px);
+            animation: fadeInUp 0.6s forwards;
+        }
+        .contact-method:nth-child(2){ animation-delay: 0.1s; }
+        .contact-method:nth-child(3){ animation-delay: 0.2s; }
+        .contact-method:nth-child(4){ animation-delay: 0.3s; }
+        .contact-method:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,168,255,0.15), inset 0 0 12px rgba(0,168,255,0.06); border-color: rgba(0,168,255,0.2); }
+
+        .contact-method h3 { font-size: 1.3rem; color: var(--primary-blue); display: flex; align-items: center; gap: 0.7rem; margin-bottom: 0.8rem; }
+        .contact-method h3 i { font-size: 1.5rem; text-shadow: var(--glow); }
+        .contact-method p, .contact-method a { color: rgba(255,255,255,0.8); line-height: 1.7; margin-bottom: 0.4rem; text-decoration: none; transition: var(--transition); display: block; font-size: 0.97rem; }
+        .contact-method a:hover { color: var(--primary-blue); text-shadow: var(--glow); }
+
+        /* Form side */
+        .contact-form {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(0,168,255,0.1);
+            opacity: 0; transform: translateY(18px);
+            animation: fadeInUp 0.6s 0.15s forwards;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .contact-form:hover { box-shadow: 0 15px 40px rgba(0,168,255,0.15), inset 0 0 15px rgba(0,168,255,0.06); border-color: rgba(0,168,255,0.25); }
+        .contact-form h3 { font-size: 1.7rem; margin-bottom: 1.8rem; color: var(--white); position: relative; padding-bottom: 0.8rem; }
+        .contact-form h3::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50%; height: 3px; background: var(--primary-blue); border-radius: 3px; box-shadow: var(--glow); transition: width 0.3s; }
+        .contact-form:hover h3::after { width: 100%; }
+
+        /* Form fields */
+        .form-group { margin-bottom: 1.6rem; position: relative; transition: transform 0.2s; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: var(--white); font-weight: 500; font-size: 0.95rem; }
+        .form-control {
+            width: 100%; padding: 0.85rem 1.2rem;
+            background: rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: var(--white); font-size: 1rem;
+            transition: var(--transition);
+        }
+        .form-control::placeholder { color: rgba(255,255,255,0.3); }
+        .form-control:focus { outline: none; border-color: var(--primary-blue); box-shadow: var(--glow); background: rgba(0,168,255,0.04); }
+        textarea.form-control { min-height: 140px; resize: vertical; }
+
+        /* Success / error feedback banner */
+        .form-feedback {
+            padding: 0.9rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            display: none;
+        }
+        .form-feedback.success { background: rgba(76,175,80,0.15); border: 1px solid rgba(76,175,80,0.4); color: #81c784; display: block; }
+        .form-feedback.error   { background: rgba(231,76,60,0.15);  border: 1px solid rgba(231,76,60,0.4);  color: #ef9a9a; display: block; }
+
+        /* Map */
+        .map-section {
+            margin-top: 2rem; border-radius: 16px; overflow: hidden;
+            box-shadow: var(--card-shadow); border: 1px solid rgba(0,168,255,0.1);
+            height: 380px;
+            opacity: 0; transform: translateY(18px);
+            animation: fadeInUp 0.6s 0.3s forwards;
+        }
+        .map-section iframe { width: 100%; height: 100%; border: none; filter: grayscale(25%) contrast(90%) brightness(65%); transition: filter 0.4s; }
+        .map-section:hover iframe { filter: grayscale(0%) contrast(100%) brightness(85%); }
+
+        /* Responsive */
+        @media (max-width: 1100px) { .contact-section { grid-template-columns: 1fr; } }
+        @media (max-width: 768px)  { .contact-info { display: grid; grid-template-columns: 1fr 1fr; } .contact-info h2 { grid-column: 1/-1; } }
+        @media (max-width: 576px)  { .contact-info { grid-template-columns: 1fr; } .contact-form { padding: 1.6rem; } }
+    </style>
+</head>
+<body>
+
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header>
+        <a href="index.html" class="logo"><span>&lt;/&gt;</span>DCODE</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html">    Home</a></li>
+                <li><a href="projects.html"> Projects</a></li>
+                <li><a href="contact.html" class="active">Contact Us</a></li>
+                <li><a href="about.html">    About Us</a></li>
+            </ul>
+        </nav>
+        <div class="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- ── Mobile Navigation ──────────────────────────────── -->
+    <nav class="mobile-nav" aria-hidden="true">
+        <ul>
+            <li><a href="index.html">    Home</a></li>
+            <li><a href="projects.html"> Projects</a></li>
+            <li><a href="contact.html" class="active">Contact Us</a></li>
+            <li><a href="about.html">    About Us</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── Main Content ───────────────────────────────────── -->
+    <main>
+
+        <div class="page-hero">
+            <h1>Get In Touch</h1>
+            <p>Have a project in mind? We'd love to hear from you. Fill in the form and we'll get back to you within 24 hours.</p>
+        </div>
+
+        <section class="contact-section">
+
+            <!-- Left: contact info cards -->
+            <div class="contact-info">
+                <h2>Contact Info</h2>
+
+                <div class="contact-method">
+                    <h3><i class="icon ion-md-mail"></i> Email Us</h3>
+                    <p>Have questions? Send us an email and we'll respond within 24 hours.</p>
+                    <a href="mailto:dcodedevs@gmail.com">dcodedevs@gmail.com</a>
+                </div>
+
+                <div class="contact-method">
+                    <h3><i class="icon ion-md-call"></i> Call Us</h3>
+                    <p>Prefer to talk? Our team is available Mon–Fri, 9am–5pm EAT.</p>
+                    <a href="tel:+254768372532">+254-768-372532</a>
+                </div>
+
+                <div class="contact-method">
+                    <h3><i class="icon ion-md-pin"></i> Find Us</h3>
+                    <p>Nairobi, Kenya</p>
+                    <p>Open: Mon–Fri 9:00am – 5:00pm EAT</p>
+                </div>
+            </div>
+
+            <!-- Right: contact form (sends to Telegram) -->
+            <div class="contact-form">
+                <h3>Send a Message</h3>
+
+                <!-- Feedback banner (shown by JS) -->
+                <div id="formFeedback" class="form-feedback" role="alert" aria-live="polite"></div>
+
+                <form id="contactForm" novalidate>
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text"  id="name"    class="form-control" placeholder="e.g. Jane Doe"          required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email"   class="form-control" placeholder="you@example.com"        required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject *</label>
+                        <input type="text"  id="subject" class="form-control" placeholder="What's this about?"     required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message *</label>
+                        <textarea id="message" class="form-control" placeholder="Tell us about your project…"      required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">
+                        Send Message <i class="icon ion-md-arrow-forward"></i>
+                    </button>
+                </form>
+            </div>
+
+        </section>
+
+        <!-- Map -->
+        <div class="map-section">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.214354770354!2d36.871226697663964!3d-1.292248029040339!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f13e9aaac2bd1%3A0xa05de4b5dda910a8!2sBuruburu%2C%20Nairobi!5e0!3m2!1sen!2ske!4v1747780277520!5m2!1sen!2ske"
+                allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                title="DCODE office location on Google Maps">
+            </iframe>
+        </div>
+
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="icon ion-md-mail"></i> dcodedevs@gmail.com</p>
+                <p><i class="icon ion-md-call"></i> +254-768-372532</p>
+                <p><i class="icon ion-md-pin"></i>  Nairobi, Kenya</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">   <i class="icon ion-md-home"></i> Home</a>
+                <a href="projects.html"><i class="icon ion-md-code-working"></i> Projects</a>
+                <a href="contact.html"> <i class="icon ion-md-mail"></i> Contact Us</a>
+                <a href="about.html">   <i class="icon ion-md-information-circle"></i> About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"> <i class="icon ion-logo-facebook"></i></a>
+                    <a href="#" aria-label="Twitter">  <i class="icon ion-logo-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"> <i class="icon ion-logo-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="icon ion-logo-instagram"></i></a>
+                    <a href="#" aria-label="GitHub">   <i class="icon ion-logo-github"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">&copy; <span id="year"></span> DCODE. All Rights Reserved. Powered by Dave</div>
+    </footer>
+
+    <!-- ── Chatbot ─────────────────────────────────────────── -->
+    <button class="chatbot-btn" aria-label="Open chat assistant">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chatbot-container" role="dialog" aria-label="DCODE Chat Assistant">
+        <div class="chatbot-header">
+            <i class="fas fa-robot"></i>
+            <h3>DCODE Assistant</h3>
+            <button class="chatbot-close" aria-label="Close chat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Ask me anything…" autocomplete="off">
+            <button class="chatbot-send" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- ✅ Shared JS (handles nav, form→Telegram, chatbot) -->
+    <script src="main.js"></script>
+
+    <!-- Contact page: wire up the feedback banner (main.js handles the Telegram send) -->
+    <script>
+        // Override the form submit UI to show an inline feedback banner
+        // instead of just changing the button colour.
+        document.addEventListener('DOMContentLoaded', () => {
+            const form     = document.getElementById('contactForm');
+            const feedback = document.getElementById('formFeedback');
+            if (!form || !feedback) return;
+
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault(); // main.js also prevents default — belt & braces
+
+                const name    = document.getElementById('name')?.value.trim();
+                const email   = document.getElementById('email')?.value.trim();
+                const subject = document.getElementById('subject')?.value.trim();
+                const message = document.getElementById('message')?.value.trim();
+
+                if (!name || !email || !subject || !message) {
+                    feedback.className = 'form-feedback error';
+                    feedback.textContent = '⚠️ Please fill in all required fields.';
+                    return;
+                }
+
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const original  = submitBtn.innerHTML;
+                submitBtn.innerHTML = 'Sending… <i class="fas fa-spinner fa-spin"></i>';
+                submitBtn.disabled  = true;
+                feedback.className  = 'form-feedback';       // hide while sending
+
+                // Build Telegram message
+                const text =
+                    `📩 <b>New Message from DCODE Website</b>\n\n` +
+                    `👤 <b>Name:</b> ${name}\n` +
+                    `📧 <b>Email:</b> ${email}\n` +
+                    `📌 <b>Subject:</b> ${subject}\n` +
+                    `💬 <b>Message:</b>\n${message}\n\n` +
+                    `🕐 <i>${new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' })}</i>`;
+
+                const ok = await sendToTelegram(text); // function defined in main.js
+
+                if (ok) {
+                    feedback.className   = 'form-feedback success';
+                    feedback.textContent = '✅ Message sent! We\'ll be in touch within 24 hours.';
+                    form.reset();
+                    submitBtn.innerHTML  = 'Send Message <i class="icon ion-md-arrow-forward"></i>';
+                } else {
+                    feedback.className   = 'form-feedback error';
+                    feedback.textContent = '❌ Something went wrong. Please email us directly at dcodedevs@gmail.com.';
+                    submitBtn.innerHTML  = original;
+                }
+
+                submitBtn.disabled = false;
+
+                // Auto-hide feedback after 6 s
+                setTimeout(() => { feedback.className = 'form-feedback'; }, 6000);
+            }, { once: false }); // allow multiple submissions
+        });
+    </script>
+</body>
+</html>
