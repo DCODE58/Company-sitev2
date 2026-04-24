@@ -3,372 +3,369 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DCODE – A Nairobi-based tech startup specialising in web development, mobile apps, UI/UX design, cloud solutions, cybersecurity, and IT consulting.">
     <title>DCODE – Web Development &amp; Tech Solutions</title>
+
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+
+    <!-- ✅ Shared stylesheet – one file to update all pages -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ── Index-specific styles ───────────────────────── */
+
+        /* Hero */
+        .hero {
+            margin-bottom: 4rem;
+            animation: slideIn 1s ease-out forwards;
+        }
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            line-height: 1.3;
+            text-shadow: var(--text-shadow);
+        }
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            color: rgba(255,255,255,0.8);
+        }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+        /* Services grid */
+        .services-section { margin: 4rem 0; }
+        .services-section h2 { font-size: 2.2rem; margin-bottom: 2.5rem; position: relative; display: inline-block; color: var(--white); text-shadow: var(--text-shadow); }
+        .services-section h2::after { content: ''; position: absolute; width: 100%; height: 3px; background: var(--primary-blue); bottom: -8px; left: 0; border-radius: 3px; box-shadow: var(--glow); }
+
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+
+        /* Service card */
+        .service-card {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid rgba(105,205,255,0.1);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .service-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,168,255,0.07) 0%, transparent 100%); z-index: -1; }
+        .service-card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(0,168,255,0.2), inset 0 0 15px rgba(0,168,255,0.07); border-color: rgba(0,168,255,0.2); }
+
+        /* Expanded card (modal) */
+        .service-card.active {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 85%; max-width: 800px;
+            max-height: 85vh; overflow-y: auto;
+            z-index: 1002;
+            animation: expand 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,168,255,0.15);
+            border: 1px solid rgba(0,168,255,0.3);
+        }
+        @keyframes expand {
+            from { opacity: 0; transform: translate(-50%,-50%) scale(0.8); }
+            to   { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+        }
+        .service-card .icon { font-size: 2.8rem; color: var(--primary-blue); margin-bottom: 1.5rem; text-shadow: var(--glow); }
+        .service-card h3   { font-size: 1.5rem; margin-bottom: 1rem; color: var(--white); }
+        .service-card .short-desc { font-size: 1rem; line-height: 1.6; color: rgba(255,255,255,0.8); }
+        .service-card .full-desc  { display: none; margin-top: 1.5rem; font-size: 1rem; line-height: 1.7; color: rgba(255,255,255,0.8); }
+        .service-card .full-desc ul { margin: 1rem 0 1rem 1.8rem; }
+        .service-card .full-desc ul li { margin-bottom: 0.5rem; }
+        .service-card.active .full-desc { display: block; }
+
+        /* Close button inside expanded card */
+        .close-btn { position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none; font-size: 1.8rem; color: var(--white); cursor: pointer; transition: var(--transition); opacity: 0.7; z-index: 1; }
+        .close-btn:hover { color: var(--primary-blue); transform: rotate(90deg); opacity: 1; }
+
+        /* Stats bar */
+        .stats-bar { display: flex; flex-wrap: wrap; gap: 2rem; margin: 3rem 0; }
+        .stat { text-align: center; flex: 1; min-width: 120px; padding: 1.5rem; background: rgba(0,168,255,0.06); border-radius: 16px; border: 1px solid rgba(0,168,255,0.1); }
+        .stat-num  { font-size: 2.5rem; font-weight: 800; color: var(--primary-blue); text-shadow: var(--glow); }
+        .stat-label{ font-size: 0.9rem; color: rgba(255,255,255,0.7); margin-top: 0.3rem; }
+
+        /* Responsive */
+        @media (max-width: 992px) { .hero h1 { font-size: 2.2rem; } }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 1.9rem; }
+            .service-card.active { width: 92%; padding: 1.8rem; }
+        }
+        @media (max-width: 576px) {
+            .hero h1 { font-size: 1.6rem; }
+            .hero p  { font-size: 1rem; }
+            .service-card.active { width: 96%; padding: 1.4rem; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- Header -->
-<header>
-    <a href="index.html" class="logo"><span>&lt;/&gt;</span>DCODE</a>
-    <nav class="desktop-nav">
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header>
+        <a href="index.html" class="logo"><span>&lt;/&gt;</span>DCODE</a>
+
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html"    class="active">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html"> Contact Us</a></li>
+                <li><a href="about.html">   About Us</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hamburger (4-span animated X) -->
+        <div class="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- ── Mobile Navigation ──────────────────────────────── -->
+    <nav class="mobile-nav" aria-hidden="true">
         <ul>
-            <li><a href="index.html" class="active">Home</a></li>
+            <li><a href="index.html"    class="active">Home</a></li>
             <li><a href="projects.html">Projects</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html"> Contact Us</a></li>
+            <li><a href="about.html">   About Us</a></li>
         </ul>
     </nav>
-    <div class="hamburger" aria-label="Toggle menu" role="button" tabindex="0">
-        <span></span><span></span><span></span><span></span>
-    </div>
-</header>
 
-<!-- Mobile Nav -->
-<nav class="mobile-nav" aria-hidden="true">
-    <ul>
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-        <li><a href="about.html">About Us</a></li>
-    </ul>
-</nav>
+    <!-- ── Main Content ───────────────────────────────────── -->
+    <main>
 
-<main>
-    <!-- Hero -->
-    <section class="hero reveal">
-        <h1>Building Digital Experiences<br>That Drive Results</h1>
-        <p>DCODE is a Nairobi-based tech startup specialising in web development, mobile apps, UI/UX design, cloud solutions, and IT consulting. We turn ideas into polished, production-ready products.</p>
-        <div class="hero-cta">
-            <a href="projects.html" class="btn-primary"><i class="fas fa-rocket"></i> View Our Work</a>
-            <a href="contact.html" class="btn-ghost"><i class="fas fa-paper-plane"></i> Get a Quote</a>
+        <!-- Hero -->
+        <section class="hero">
+            <h1>Welcome to DCODE 🚀</h1>
+            <p>We are a Nairobi-based tech startup focused on Web Development, Software Engineering, Mobile Apps, and Tech Consultation. Our team delivers cutting-edge, bespoke digital solutions that help businesses grow in the modern world.</p>
+            <div class="hero-actions">
+                <a href="contact.html"  class="btn-primary"><i class="fas fa-paper-plane"></i> Get a Free Quote</a>
+                <a href="projects.html" class="btn-primary" style="background: transparent; border: 1px solid var(--primary-blue);"><i class="fas fa-folder-open"></i> View Projects</a>
+            </div>
+        </section>
+
+        <!-- Quick stats -->
+        <div class="stats-bar">
+            <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Projects Delivered</div></div>
+            <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Happy Clients</div></div>
+            <div class="stat"><div class="stat-num">4+</div><div class="stat-label">Years Experience</div></div>
+            <div class="stat"><div class="stat-num">8</div><div class="stat-label">Core Services</div></div>
         </div>
-    </section>
 
-    <!-- Stats Bar -->
-    <div class="stats-bar reveal reveal-delay-1">
-        <div class="stat-item">
-            <span class="stat-number" data-target="30" data-suffix="+">0+</span>
-            <span class="stat-label">Projects Delivered</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number" data-target="8" data-suffix="">0</span>
-            <span class="stat-label">Core Services</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number" data-target="98" data-suffix="%">0%</span>
-            <span class="stat-label">Client Satisfaction</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-number" data-target="5" data-suffix="+">0+</span>
-            <span class="stat-label">Years Experience</span>
-        </div>
-    </div>
+        <!-- Services -->
+        <section class="services-section">
+            <h2>Our Services</h2>
+            <div class="services-grid">
 
-    <!-- Tech Stack Strip -->
-    <section class="tech-stack reveal">
-        <div class="tech-strip" aria-label="Technologies we use">
-            <!-- First set -->
-            <span class="tech-badge"><i class="fab fa-react"></i> React</span>
-            <span class="tech-badge"><i class="fab fa-node-js"></i> Node.js</span>
-            <span class="tech-badge"><i class="fab fa-flutter" style="color:var(--primary-blue)"></i> Flutter</span>
-            <span class="tech-badge"><i class="fab fa-python"></i> Python</span>
-            <span class="tech-badge"><i class="fab fa-aws"></i> AWS</span>
-            <span class="tech-badge"><i class="fab fa-angular"></i> Angular</span>
-            <span class="tech-badge"><i class="fab fa-vuejs"></i> Vue.js</span>
-            <span class="tech-badge"><i class="fas fa-database"></i> MongoDB</span>
-            <span class="tech-badge"><i class="fas fa-cloud"></i> Azure</span>
-            <span class="tech-badge"><i class="fab fa-docker"></i> Docker</span>
-            <!-- Duplicate for seamless loop -->
-            <span class="tech-badge"><i class="fab fa-react"></i> React</span>
-            <span class="tech-badge"><i class="fab fa-node-js"></i> Node.js</span>
-            <span class="tech-badge"><i class="fab fa-flutter" style="color:var(--primary-blue)"></i> Flutter</span>
-            <span class="tech-badge"><i class="fab fa-python"></i> Python</span>
-            <span class="tech-badge"><i class="fab fa-aws"></i> AWS</span>
-            <span class="tech-badge"><i class="fab fa-angular"></i> Angular</span>
-            <span class="tech-badge"><i class="fab fa-vuejs"></i> Vue.js</span>
-            <span class="tech-badge"><i class="fas fa-database"></i> MongoDB</span>
-            <span class="tech-badge"><i class="fas fa-cloud"></i> Azure</span>
-            <span class="tech-badge"><i class="fab fa-docker"></i> Docker</span>
-        </div>
-    </section>
-
-    <!-- Services -->
-    <section class="services-section">
-        <h2 class="section-header reveal">Our Services</h2>
-        <div class="services-grid">
-
-            <div class="service-card reveal reveal-delay-1">
-                <div class="icon"><i class="icon ion-md-code"></i></div>
-                <h3>Web Development</h3>
-                <p class="short-desc">Custom websites and web applications built with modern, battle-tested technologies.</p>
-                <div class="full-desc">
-                    <p>Our web development services include:</p>
-                    <ul>
-                        <li>Responsive website design</li>
-                        <li>Single Page Applications (SPA)</li>
-                        <li>E-commerce solutions</li>
-                        <li>Content Management Systems</li>
-                        <li>API development and integration</li>
-                    </ul>
-                    <p>Technologies: HTML, CSS, JS, React, Angular, Vue.js, Node.js, Django, Laravel.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-2">
-                <div class="icon"><i class="icon ion-md-brush"></i></div>
-                <h3>UI/UX Design</h3>
-                <p class="short-desc">Beautiful, intuitive interfaces that keep users engaged and convert.</p>
-                <div class="full-desc">
-                    <p>Our UI/UX design services include:</p>
-                    <ul>
-                        <li>User research and persona development</li>
-                        <li>Wireframing and prototyping</li>
-                        <li>User interface design</li>
-                        <li>User experience optimisation</li>
-                        <li>Usability testing</li>
-                    </ul>
-                    <p>We create designs that are visually compelling and highly functional.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-3">
-                <div class="icon"><i class="icon ion-md-settings"></i></div>
-                <h3>Network Administration</h3>
-                <p class="short-desc">Comprehensive network solutions for businesses of all sizes.</p>
-                <div class="full-desc">
-                    <p>Our network administration services include:</p>
-                    <ul>
-                        <li>Network setup and configuration</li>
-                        <li>Security monitoring and management</li>
-                        <li>Cloud network solutions</li>
-                        <li>VPN setup and management</li>
-                        <li>24/7 network monitoring</li>
-                    </ul>
-                    <p>We keep your infrastructure secure, reliable, and optimised.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-1">
-                <div class="icon"><i class="icon ion-md-analytics"></i></div>
-                <h3>Data Administration</h3>
-                <p class="short-desc">Efficient data management and database solutions for your business.</p>
-                <div class="full-desc">
-                    <p>Our data administration services include:</p>
-                    <ul>
-                        <li>Database design and implementation</li>
-                        <li>Data migration services</li>
-                        <li>Database optimisation</li>
-                        <li>Backup and recovery solutions</li>
-                        <li>Data security and compliance</li>
-                    </ul>
-                    <p>We work with MySQL, PostgreSQL, MongoDB, and more.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-2">
-                <div class="icon"><i class="icon ion-md-phone-portrait"></i></div>
-                <h3>Mobile App Development</h3>
-                <p class="short-desc">Cross-platform mobile applications for iOS and Android.</p>
-                <div class="full-desc">
-                    <p>Our mobile app development services include:</p>
-                    <ul>
-                        <li>Native iOS and Android development</li>
-                        <li>Cross-platform apps with Flutter/React Native</li>
-                        <li>App UI/UX design</li>
-                        <li>API integration</li>
-                        <li>App store deployment</li>
-                    </ul>
-                    <p>We build performant apps with exceptional user experiences.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-3">
-                <div class="icon"><i class="icon ion-md-cloud"></i></div>
-                <h3>Cloud Solutions</h3>
-                <p class="short-desc">Scalable cloud infrastructure and services for your business.</p>
-                <div class="full-desc">
-                    <p>Our cloud solutions include:</p>
-                    <ul>
-                        <li>Cloud migration services</li>
-                        <li>AWS, Azure, and Google Cloud solutions</li>
-                        <li>Serverless architecture</li>
-                        <li>Cloud security and compliance</li>
-                        <li>Cost optimisation</li>
-                    </ul>
-                    <p>We help businesses leverage cloud computing to scale efficiently.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-1">
-                <div class="icon"><i class="icon ion-md-lock"></i></div>
-                <h3>Cybersecurity</h3>
-                <p class="short-desc">Comprehensive security solutions to protect your digital assets.</p>
-                <div class="full-desc">
-                    <p>Our cybersecurity services include:</p>
-                    <ul>
-                        <li>Security audits and assessments</li>
-                        <li>Penetration testing</li>
-                        <li>Security policy development</li>
-                        <li>Incident response planning</li>
-                        <li>Employee security training</li>
-                    </ul>
-                    <p>End-to-end security against evolving threats.</p>
-                </div>
-            </div>
-
-            <div class="service-card reveal reveal-delay-2">
-                <div class="icon"><i class="icon ion-md-bulb"></i></div>
-                <h3>IT Consulting</h3>
-                <p class="short-desc">Strategic technology advice to drive your business forward.</p>
-                <div class="full-desc">
-                    <p>Our IT consulting services include:</p>
-                    <ul>
-                        <li>Technology strategy development</li>
-                        <li>Digital transformation consulting</li>
-                        <li>IT infrastructure planning</li>
-                        <li>Software selection assistance</li>
-                        <li>Technology roadmap creation</li>
-                    </ul>
-                    <p>Aligning technology investments with your strategic goals.</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <!-- How We Work -->
-    <section class="process-section">
-        <h2 class="section-header reveal">How We Work</h2>
-        <div class="process-steps">
-            <div class="process-step reveal reveal-delay-1">
-                <div class="step-number">1</div>
-                <h4>Discover</h4>
-                <p>We listen, research, and deeply understand your goals before writing a single line of code.</p>
-            </div>
-            <div class="process-step reveal reveal-delay-2">
-                <div class="step-number">2</div>
-                <h4>Design</h4>
-                <p>Wireframes and prototypes are created and refined with your feedback until the vision is clear.</p>
-            </div>
-            <div class="process-step reveal reveal-delay-3">
-                <div class="step-number">3</div>
-                <h4>Build</h4>
-                <p>Our engineers develop your solution using modern frameworks, best practices, and clean code.</p>
-            </div>
-            <div class="process-step reveal reveal-delay-4">
-                <div class="step-number">4</div>
-                <h4>Launch</h4>
-                <p>We test thoroughly, deploy to production, and remain on-hand for ongoing support.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials -->
-    <section class="testimonials-section">
-        <h2 class="section-header reveal">What Clients Say</h2>
-        <div class="testimonials-grid">
-            <div class="testimonial-card reveal reveal-delay-1">
-                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <p class="testimonial-text">DCODE transformed our outdated platform into a modern, blazing-fast web app. The team communicated brilliantly throughout and delivered ahead of schedule.</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">AM</div>
-                    <div>
-                        <div class="author-name">Amina Mugo</div>
-                        <div class="author-role">CEO, RetailEdge Kenya</div>
+                <!-- 1 – Web Development -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-code"></i></div>
+                    <h3>Web Development</h3>
+                    <p class="short-desc">Custom websites and web applications built with modern technologies.</p>
+                    <div class="full-desc">
+                        <p>Our web development services include:</p>
+                        <ul>
+                            <li>Responsive website design</li>
+                            <li>Single Page Applications (SPA)</li>
+                            <li>E-commerce solutions</li>
+                            <li>Content Management Systems (CMS)</li>
+                            <li>API development &amp; integration</li>
+                        </ul>
+                        <p>Tech stack: HTML5, CSS3, JavaScript, React, Angular, Vue.js (front-end) • Node.js, Django, Laravel (back-end).</p>
                     </div>
                 </div>
-            </div>
-            <div class="testimonial-card reveal reveal-delay-2">
-                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <p class="testimonial-text">Their mobile app exceeded our expectations. It's polished, intuitive, and our customers love it. The Flutter implementation was flawless.</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">JO</div>
-                    <div>
-                        <div class="author-name">James Ochieng</div>
-                        <div class="author-role">Founder, FitTrack Africa</div>
+
+                <!-- 2 – UI/UX Design -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-brush"></i></div>
+                    <h3>UI/UX Design</h3>
+                    <p class="short-desc">Beautiful, intuitive interfaces that delight users and drive conversions.</p>
+                    <div class="full-desc">
+                        <p>Our design services include:</p>
+                        <ul>
+                            <li>User research &amp; persona development</li>
+                            <li>Wireframing &amp; prototyping (Figma)</li>
+                            <li>Full visual interface design</li>
+                            <li>User experience optimisation</li>
+                            <li>Usability testing &amp; iteration</li>
+                        </ul>
+                        <p>We create designs that are visually stunning and functionally excellent.</p>
                     </div>
                 </div>
-            </div>
-            <div class="testimonial-card reveal reveal-delay-3">
-                <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-                <p class="testimonial-text">The cloud migration DCODE handled was seamless — zero downtime and costs dropped by 30% in the first month. Highly professional team.</p>
-                <div class="testimonial-author">
-                    <div class="author-avatar">SK</div>
-                    <div>
-                        <div class="author-name">Sarah Kamau</div>
-                        <div class="author-role">IT Director, FinServe Ltd</div>
+
+                <!-- 3 – Network Administration -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-settings"></i></div>
+                    <h3>Network Administration</h3>
+                    <p class="short-desc">Comprehensive network solutions for businesses of all sizes.</p>
+                    <div class="full-desc">
+                        <p>Our network services include:</p>
+                        <ul>
+                            <li>LAN/WAN setup &amp; configuration</li>
+                            <li>Security monitoring &amp; management</li>
+                            <li>Cloud network solutions</li>
+                            <li>VPN setup &amp; management</li>
+                            <li>24/7 network monitoring</li>
+                        </ul>
+                        <p>We ensure your infrastructure is secure, reliable, and optimised for performance.</p>
                     </div>
+                </div>
+
+                <!-- 4 – Data Administration -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-analytics"></i></div>
+                    <h3>Data Administration</h3>
+                    <p class="short-desc">Efficient data management and database solutions for your business.</p>
+                    <div class="full-desc">
+                        <p>Our data services include:</p>
+                        <ul>
+                            <li>Database design &amp; implementation</li>
+                            <li>Data migration services</li>
+                            <li>Query &amp; schema optimisation</li>
+                            <li>Backup &amp; disaster recovery</li>
+                            <li>Data security &amp; compliance</li>
+                        </ul>
+                        <p>We work with MySQL, PostgreSQL, MongoDB, Redis, and more.</p>
+                    </div>
+                </div>
+
+                <!-- 5 – Mobile App Development -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-phone-portrait"></i></div>
+                    <h3>Mobile App Development</h3>
+                    <p class="short-desc">Cross-platform mobile applications for iOS and Android.</p>
+                    <div class="full-desc">
+                        <p>Our mobile services include:</p>
+                        <ul>
+                            <li>Native iOS (Swift) &amp; Android (Kotlin)</li>
+                            <li>Cross-platform with Flutter / React Native</li>
+                            <li>App UI/UX design</li>
+                            <li>REST / GraphQL API integration</li>
+                            <li>App Store &amp; Play Store deployment</li>
+                        </ul>
+                        <p>We build performant, polished mobile apps loved by users.</p>
+                    </div>
+                </div>
+
+                <!-- 6 – Cloud Solutions -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-cloud"></i></div>
+                    <h3>Cloud Solutions</h3>
+                    <p class="short-desc">Scalable cloud infrastructure and DevOps for your business.</p>
+                    <div class="full-desc">
+                        <p>Our cloud services include:</p>
+                        <ul>
+                            <li>Cloud migration (AWS / Azure / GCP)</li>
+                            <li>Serverless architecture design</li>
+                            <li>Containerisation with Docker &amp; Kubernetes</li>
+                            <li>CI/CD pipelines</li>
+                            <li>Cloud cost optimisation</li>
+                        </ul>
+                        <p>We help you scale confidently while reducing infrastructure costs.</p>
+                    </div>
+                </div>
+
+                <!-- 7 – Cybersecurity -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-lock"></i></div>
+                    <h3>Cybersecurity</h3>
+                    <p class="short-desc">Comprehensive security solutions to protect your digital assets.</p>
+                    <div class="full-desc">
+                        <p>Our security services include:</p>
+                        <ul>
+                            <li>Security audits &amp; assessments</li>
+                            <li>Penetration testing</li>
+                            <li>Security policy development</li>
+                            <li>Incident response planning</li>
+                            <li>Staff security awareness training</li>
+                        </ul>
+                        <p>End-to-end protection against evolving cyber threats.</p>
+                    </div>
+                </div>
+
+                <!-- 8 – IT Consulting -->
+                <div class="service-card">
+                    <div class="icon"><i class="icon ion-md-bulb"></i></div>
+                    <h3>IT Consulting</h3>
+                    <p class="short-desc">Strategic technology advice to drive your business forward.</p>
+                    <div class="full-desc">
+                        <p>Our consulting services include:</p>
+                        <ul>
+                            <li>Technology strategy development</li>
+                            <li>Digital transformation consulting</li>
+                            <li>IT infrastructure planning</li>
+                            <li>Software selection &amp; vendor management</li>
+                            <li>Technology roadmap creation</li>
+                        </ul>
+                        <p>We align your technology investments with your strategic objectives.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Overlay backdrop for expanded service cards -->
+        <div class="overlay"></div>
+
+    </main>
+
+    <!-- ── Footer ──────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="icon ion-md-mail"></i> dcodedevs@gmail.com</p>
+                <p><i class="icon ion-md-call"></i> +254-768-372532</p>
+                <p><i class="icon ion-md-pin"></i> Nairobi, Kenya</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">   <i class="icon ion-md-home"></i> Home</a>
+                <a href="projects.html"><i class="icon ion-md-code-working"></i> Projects</a>
+                <a href="contact.html"> <i class="icon ion-md-mail"></i> Contact Us</a>
+                <a href="about.html">   <i class="icon ion-md-information-circle"></i> About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"> <i class="icon ion-logo-facebook"></i></a>
+                    <a href="#" aria-label="Twitter">  <i class="icon ion-logo-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"> <i class="icon ion-logo-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="icon ion-logo-instagram"></i></a>
+                    <a href="#" aria-label="GitHub">   <i class="icon ion-logo-github"></i></a>
                 </div>
             </div>
         </div>
-    </section>
+        <div class="copyright">&copy; <span id="year"></span> DCODE. All Rights Reserved. Powered by Dave</div>
+    </footer>
 
-    <div class="overlay"></div>
-</main>
+    <!-- ── Chatbot ─────────────────────────────────────────── -->
+    <button class="chatbot-btn" aria-label="Open chat assistant">
+        <i class="fas fa-comment-dots"></i>
+    </button>
 
-<!-- Footer -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-section">
-            <h3>Contact Us</h3>
-            <p><i class="icon ion-md-mail"></i> dcodedevs@gmail.com</p>
-            <p><i class="icon ion-md-call"></i> +254-768-372532</p>
-            <p><i class="icon ion-md-pin"></i> Nairobi, Kenya</p>
+    <div class="chatbot-container" role="dialog" aria-label="DCODE Chat Assistant">
+        <div class="chatbot-header">
+            <i class="fas fa-robot"></i>
+            <h3>DCODE Assistant</h3>
+            <button class="chatbot-close" aria-label="Close chat"><i class="fas fa-times"></i></button>
         </div>
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <a href="index.html"><i class="icon ion-md-home"></i> Home</a>
-            <a href="projects.html"><i class="icon ion-md-code-working"></i> Projects</a>
-            <a href="contact.html"><i class="icon ion-md-mail"></i> Contact Us</a>
-            <a href="about.html"><i class="icon ion-md-information-circle"></i> About Us</a>
-        </div>
-        <div class="footer-section">
-            <h3>Connect With Us</h3>
-            <div class="social-icons">
-                <a href="#" aria-label="Facebook"><i class="icon ion-logo-facebook"></i></a>
-                <a href="#" aria-label="Twitter"><i class="icon ion-logo-twitter"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="icon ion-logo-linkedin"></i></a>
-                <a href="#" aria-label="Instagram"><i class="icon ion-logo-instagram"></i></a>
-                <a href="#" aria-label="GitHub"><i class="icon ion-logo-github"></i></a>
-            </div>
+        <div class="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Ask me anything…" autocomplete="off">
+            <button class="chatbot-send" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
-    <div class="copyright">&copy; <span id="year"></span> DCODE. All Rights Reserved. Powered by Dave</div>
-</footer>
 
-<!-- Scroll to Top -->
-<button id="scrollTop" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
-
-<!-- Chatbot -->
-<button class="chatbot-btn" aria-label="Open chat assistant">
-    <span class="chatbot-badge" aria-hidden="true"></span>
-    <i class="fas fa-comment-dots"></i>
-</button>
-
-<div class="chatbot-container" role="dialog" aria-label="DCODE Chat Assistant">
-    <div class="chatbot-header">
-        <div class="chatbot-header-dot" aria-hidden="true"></div>
-        <i class="fas fa-robot"></i>
-        <h3>DCODE Assistant</h3>
-        <button class="chatbot-close" aria-label="Close chat"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="chatbot-messages">
-        <div class="message message-bot">
-            <div class="message-content">Hello! I'm the DCODE assistant. How can I help you today?</div>
-            <div class="message-time">Just now</div>
-        </div>
-    </div>
-    <div class="quick-replies" aria-label="Quick reply options"></div>
-    <div class="chatbot-input-area">
-        <input type="text" id="chatbot-input-field" placeholder="Type a message…" autocomplete="off">
-        <button class="chatbot-send" aria-label="Send message"><i class="fas fa-paper-plane"></i></button>
-    </div>
-</div>
-
-<script src="main.js"></script>
+    <!-- ✅ Shared JS – handles nav, chatbot, form & more -->
+    <script src="main.js"></script>
 </body>
-      </html>
+</html>
