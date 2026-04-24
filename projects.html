@@ -3,701 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse DCODE's portfolio of web, mobile, cloud, AI, and design projects.">
-    <title>Projects | DCODE</title>
+    <title>Our Projects | DCODE</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* ── Projects page styles ── */
-        .projects-hero { margin-bottom: 2.5rem; }
-        .projects-hero h1 { font-size: 2.8rem; color: var(--white); text-shadow: 0 0 10px rgba(0,168,255,0.3); margin-bottom: 1rem; }
-        .projects-hero p  { font-size: 1.15rem; color: rgba(255,255,255,0.75); max-width: 700px; line-height: 1.6; }
 
-        /* Controls */
+    <!-- ✅ Shared stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        /* ── Projects-specific styles ─────────────────────── */
+
+        .page-hero { margin-bottom: 2.5rem; animation: slideIn 0.9s ease-out forwards; }
+        .page-hero h1 { font-size: 2.6rem; color: var(--white); text-shadow: var(--text-shadow); margin-bottom: 0.8rem; }
+        .page-hero p  { font-size: 1.1rem; color: rgba(255,255,255,0.75); line-height: 1.7; max-width: 650px; }
+
+        /* ── Project controls bar ──────────────────────────── */
         .project-controls {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            align-items: center;
             margin-bottom: 2.5rem;
-            padding: 1rem 1.2rem;
+            align-items: center;
             background: rgba(255,255,255,0.02);
+            padding: 0.65rem 1rem;
+            border-radius: 14px;
             border: 1px solid rgba(255,255,255,0.04);
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        .search-container {
-            position: relative;
-            flex: 1;
-            min-width: 220px;
-        }
-
-        .search-container i {
-            position: absolute;
-            left: 14px; top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary-blue);
-            font-size: 0.95rem;
-            pointer-events: none;
-        }
-
+        /* Search input */
+        .search-container { position: relative; flex-grow: 1; min-width: 220px; max-width: 500px; }
+        .search-container i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--primary-blue); font-size: 1rem; text-shadow: var(--glow); }
         #project-search {
             width: 100%;
-            padding: 10px 16px 10px 40px;
-            background: rgba(255,255,255,0.03);
+            padding: 11px 16px 11px 42px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 999px;
             border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 30px;
             color: var(--white);
-            font-size: 0.95rem;
-            outline: none;
-            transition: var(--transition);
-            backdrop-filter: blur(6px);
-        }
-
-        #project-search::placeholder { color: rgba(255,255,255,0.4); }
-        #project-search:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(0,168,255,0.12); }
-
-        .search-clear {
-            position: absolute;
-            right: 12px; top: 50%;
-            transform: translateY(-50%);
-            background: none; border: none;
-            color: rgba(255,255,255,0.4);
-            cursor: pointer;
             font-size: 1rem;
-            padding: 4px;
             transition: var(--transition);
-            display: none;
         }
+        #project-search::placeholder { color: rgba(255,255,255,0.4); }
+        #project-search:focus { outline: none; border-color: var(--primary-blue); box-shadow: var(--glow); }
 
-        .search-clear:hover { color: var(--primary-blue); }
-
-        .filter-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
+        /* Filter buttons */
+        .filter-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-left: auto; }
         .filter-btn {
-            padding: 7px 16px;
+            padding: 8px 18px;
             background: rgba(255,255,255,0.03);
             color: rgba(255,255,255,0.85);
             border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 30px;
+            border-radius: 999px;
             cursor: pointer;
-            font-size: 0.88rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            letter-spacing: 0.3px;
             transition: var(--transition);
             backdrop-filter: blur(6px);
         }
+        .filter-btn:hover  { transform: translateY(-2px); background: rgba(0,168,255,0.08); border-color: rgba(0,168,255,0.15); box-shadow: 0 6px 18px rgba(0,168,255,0.08); }
+        .filter-btn.active { background: rgba(0,168,255,0.15); color: var(--white); border-color: rgba(0,168,255,0.3); box-shadow: 0 8px 24px rgba(0,168,255,0.12); transform: translateY(-2px); }
 
-        .filter-btn:hover {
-            background: rgba(0,168,255,0.08);
-            border-color: rgba(0,168,255,0.18);
-            transform: translateY(-2px);
-        }
+        /* ── Projects grid ─────────────────────────────────── */
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px,1fr)); gap: 2rem; }
 
-        .filter-btn.active {
-            background: rgba(0,168,255,0.15);
-            border-color: rgba(0,168,255,0.35);
-            color: var(--white);
-            box-shadow: 0 4px 16px rgba(0,168,255,0.1);
-            transform: translateY(-2px);
-        }
-
-        /* Sort control */
-        .sort-select {
-            padding: 8px 14px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 30px;
-            color: rgba(255,255,255,0.85);
-            font-size: 0.88rem;
-            cursor: pointer;
-            outline: none;
-            transition: var(--transition);
-            backdrop-filter: blur(6px);
-        }
-
-        .sort-select:focus { border-color: var(--primary-blue); }
-        .sort-select option { background: #1e1e1e; color: var(--white); }
-
-        /* Results bar */
-        .results-bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            font-size: 0.88rem;
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        /* Card */
         .project-card {
-            display: flex;
-            flex-direction: column;
-            background: rgba(255,255,255,0.025);
+            display: flex; flex-direction: column;
+            background: rgba(255,255,255,0.02);
             border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
-            backdrop-filter: blur(10px) saturate(140%);
-            -webkit-backdrop-filter: blur(10px) saturate(140%);
-            box-shadow: 0 10px 30px rgba(0,116,204,0.08), inset 0 1px 0 rgba(255,255,255,0.03);
-            transition: transform 0.4s cubic-bezier(0.2,0.9,0.2,1), box-shadow 0.4s, border-color 0.3s;
-            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 28px rgba(0,116,204,0.1), inset 0 1px 0 rgba(255,255,255,0.025);
+            transition: transform 0.38s cubic-bezier(0.2,0.9,0.2,1), box-shadow 0.38s;
+            opacity: 0;
+            animation: fadeInUp 0.55s forwards;
         }
+        .project-card:nth-child(1){ animation-delay: 0.05s; }
+        .project-card:nth-child(2){ animation-delay: 0.12s; }
+        .project-card:nth-child(3){ animation-delay: 0.19s; }
+        .project-card:nth-child(4){ animation-delay: 0.26s; }
+        .project-card:nth-child(5){ animation-delay: 0.33s; }
+        .project-card:nth-child(6){ animation-delay: 0.40s; }
+        .project-card:hover { transform: translateY(-8px) scale(1.01); box-shadow: 0 20px 40px rgba(0,168,255,0.18), inset 0 0 12px rgba(0,168,255,0.06); border-color: rgba(0,168,255,0.2); }
 
-        .project-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 22px 50px rgba(0,116,204,0.14), inset 0 1px 0 rgba(255,255,255,0.04);
-            border-color: rgba(0,168,255,0.2);
-        }
+        /* Image placeholder */
+        .project-image-wrap { width: 100%; height: 190px; overflow: hidden; background: rgba(0,168,255,0.05); position: relative; }
+        .project-image-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .project-card:hover .project-image-wrap img { transform: scale(1.05); }
+        .project-image-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: var(--primary-blue); opacity: 0.4; }
 
-        /* Featured badge */
-        .card-featured-badge {
-            position: absolute;
-            top: 12px; right: 12px;
-            padding: 3px 10px;
-            background: rgba(0,168,255,0.25);
-            border: 1px solid rgba(0,168,255,0.45);
-            border-radius: 20px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: var(--primary-blue);
-            text-shadow: var(--glow);
-            letter-spacing: 0.05em;
-            z-index: 2;
-        }
+        /* Body */
+        .project-body { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; }
+        .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
+        .project-tag  { padding: 3px 12px; background: rgba(0,168,255,0.1); border: 1px solid rgba(0,168,255,0.15); border-radius: 999px; font-size: 0.78rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+        .project-body h3  { font-size: 1.25rem; color: var(--white); margin-bottom: 0.7rem; }
+        .project-body > p { font-size: 0.95rem; line-height: 1.7; color: rgba(255,255,255,0.75); flex: 1; margin-bottom: 1.3rem; }
 
-        .project-image-wrap {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .project-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s cubic-bezier(0.2,0.9,0.2,1), filter 0.4s;
-            filter: contrast(1.02) saturate(1.05) brightness(0.88);
-        }
-
-        .project-card:hover .project-image {
-            transform: scale(1.06) translateY(-3px);
-            filter: brightness(0.95) contrast(1.04);
-        }
-
-        .project-body {
-            padding: 1.4rem;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-
-        .project-tags {
-            display: flex;
-            gap: 0.45rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.8rem;
-        }
-
-        .project-tag {
-            background: rgba(255,255,255,0.04);
-            color: rgba(255,255,255,0.85);
-            border: 1px solid rgba(255,255,255,0.07);
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            backdrop-filter: blur(4px);
-            transition: var(--transition);
-        }
-
-        .project-tag:hover {
-            background: rgba(0,168,255,0.1);
-            border-color: rgba(0,168,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        .project-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.7rem;
-            color: var(--white);
-        }
-
-        .project-card p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.72);
-            margin-bottom: 1.2rem;
-            flex: 1;
-        }
-
-        .project-links {
-            display: flex;
-            gap: 0.7rem;
-            flex-wrap: wrap;
-        }
-
+        /* Links */
+        .project-links { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: auto; }
         .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--white);
-            text-decoration: none;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.07);
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 7px 16px; font-size: 0.88rem; font-weight: 600;
+            color: var(--primary-blue); border: 1px solid rgba(0,168,255,0.25);
+            border-radius: 8px; text-decoration: none;
             transition: var(--transition);
-            backdrop-filter: blur(6px);
         }
-
-        .project-link:hover {
-            transform: translateY(-3px);
-            color: var(--primary-blue);
-            background: rgba(0,168,255,0.08);
-            box-shadow: 0 8px 20px rgba(0,168,255,0.1);
-            border-color: rgba(0,168,255,0.2);
-        }
+        .project-link:hover { background: rgba(0,168,255,0.12); transform: translateY(-2px); box-shadow: var(--glow); }
 
         /* No results */
-        .no-results {
-            text-align: center;
-            padding: 4rem 2rem;
-            display: none;
-            grid-column: 1 / -1;
-        }
+        .no-results { text-align: center; padding: 3rem; color: rgba(255,255,255,0.55); display: none; }
+        .no-results h3 { font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--white); }
 
-        .no-results i { font-size: 3rem; color: rgba(0,168,255,0.3); margin-bottom: 1rem; display: block; }
-        .no-results h3 { font-size: 1.4rem; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
-        .no-results p  { color: rgba(255,255,255,0.4); font-size: 0.95rem; }
-
-        /* Card hidden state */
-        .project-card.hidden {
-            display: none;
-        }
-
+        /* Responsive */
         @media (max-width: 768px) {
-            .project-controls { flex-direction: column; align-items: stretch; }
-            .filter-buttons { justify-content: center; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .results-bar { flex-direction: column; gap: 0.4rem; text-align: center; }
-            .projects-hero h1 { font-size: 2rem; }
+            .filter-buttons { justify-content: center; margin-left: 0; }
+            .search-container { min-width: 0; width: 100%; max-width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<!-- Header -->
-<header>
-    <a href="index.html" class="logo"><span>&lt;/&gt;</span>DCODE</a>
-    <nav class="desktop-nav">
+    <!-- ── Header ─────────────────────────────────────────── -->
+    <header>
+        <a href="index.html" class="logo"><span>&lt;/&gt;</span>DCODE</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html">    Home</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="contact.html">  Contact Us</a></li>
+                <li><a href="about.html">    About Us</a></li>
+            </ul>
+        </nav>
+        <div class="hamburger" aria-label="Toggle menu">
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <!-- ── Mobile Navigation ──────────────────────────────── -->
+    <nav class="mobile-nav" aria-hidden="true">
         <ul>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html">    Home</a></li>
             <li><a href="projects.html" class="active">Projects</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
-            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">  Contact Us</a></li>
+            <li><a href="about.html">    About Us</a></li>
         </ul>
     </nav>
-    <div class="hamburger" aria-label="Toggle menu" role="button" tabindex="0">
-        <span></span><span></span><span></span><span></span>
-    </div>
-</header>
 
-<!-- Mobile Nav -->
-<nav class="mobile-nav" aria-hidden="true">
-    <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="projects.html" class="active">Projects</a></li>
-        <li><a href="contact.html">Contact Us</a></li>
-        <li><a href="about.html">About Us</a></li>
-    </ul>
-</nav>
+    <!-- ── Main Content ───────────────────────────────────── -->
+    <main>
 
-<main>
-    <!-- Hero -->
-    <section class="projects-hero reveal">
-        <h1>Our Portfolio</h1>
-        <p>Explore our collection of innovative projects — from e-commerce platforms to AI-powered tools and cloud migrations.</p>
-    </section>
-
-    <!-- Controls -->
-    <div class="project-controls reveal">
-        <div class="search-container">
-            <i class="fas fa-search" aria-hidden="true"></i>
-            <input type="text" id="project-search" placeholder="Search projects…" autocomplete="off" aria-label="Search projects">
-            <button class="search-clear" id="search-clear" aria-label="Clear search"><i class="fas fa-times"></i></button>
+        <div class="page-hero">
+            <h1>Our Projects</h1>
+            <p>A curated selection of the work we're most proud of — spanning web, mobile, cloud, and AI.</p>
         </div>
 
-        <div class="filter-buttons" role="group" aria-label="Filter by category">
-            <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
-            <button class="filter-btn" data-filter="web" aria-pressed="false">Web</button>
-            <button class="filter-btn" data-filter="mobile" aria-pressed="false">Mobile</button>
-            <button class="filter-btn" data-filter="design" aria-pressed="false">Design</button>
-            <button class="filter-btn" data-filter="cloud" aria-pressed="false">Cloud</button>
-            <button class="filter-btn" data-filter="ai" aria-pressed="false">AI</button>
-            <button class="filter-btn" data-filter="blockchain" aria-pressed="false">Blockchain</button>
+        <!-- Filter & search controls -->
+        <div class="project-controls" role="search">
+            <div class="search-container">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input type="text" id="project-search" placeholder="Search projects…" autocomplete="off" aria-label="Search projects">
+            </div>
+            <div class="filter-buttons" role="group" aria-label="Filter by category">
+                <button class="filter-btn active" data-filter="all"    aria-pressed="true"> All</button>
+                <button class="filter-btn"         data-filter="web"   aria-pressed="false">Web</button>
+                <button class="filter-btn"         data-filter="mobile"aria-pressed="false">Mobile</button>
+                <button class="filter-btn"         data-filter="design"aria-pressed="false">Design</button>
+                <button class="filter-btn"         data-filter="cloud" aria-pressed="false">Cloud</button>
+                <button class="filter-btn"         data-filter="ai"    aria-pressed="false">AI</button>
+            </div>
         </div>
 
-        <select class="sort-select" id="sort-select" aria-label="Sort projects">
-            <option value="default">Sort: Default</option>
-            <option value="az">A → Z</option>
-            <option value="za">Z → A</option>
-        </select>
-    </div>
+        <!-- Projects grid -->
+        <section class="projects-section">
+            <div class="projects-grid" id="projects-container">
 
-    <!-- Results bar -->
-    <div class="results-bar" id="results-bar">
-        <span id="results-count">Showing all projects</span>
-    </div>
+                <!-- Project 1 -->
+                <div class="project-card" data-tags="web design" data-title="ecommerce platform">
+                    <div class="project-image-wrap">
+                        <img src="https://via.placeholder.com/600x400/1e1e1e/00a8ff?text=E-Commerce+Platform" alt="E-Commerce Platform" loading="lazy">
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="project-tag">Web Development</span>
+                            <span class="project-tag">E-Commerce</span>
+                            <span class="project-tag">React</span>
+                        </div>
+                        <h3>E-Commerce Platform</h3>
+                        <p>A full-featured online store with product management, cart functionality, and secure payment processing built with modern web technologies.</p>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                        </div>
+                    </div>
+                </div>
 
-    <!-- Projects Grid -->
-    <div class="projects-grid" id="projects-container">
+                <!-- Project 2 -->
+                <div class="project-card" data-tags="mobile" data-title="fitness tracker app">
+                    <div class="project-image-wrap">
+                        <img src="https://via.placeholder.com/600x400/1e1e1e/0097e6?text=Fitness+Tracker" alt="Fitness Tracker App" loading="lazy">
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="project-tag">Mobile App</span>
+                            <span class="project-tag">Flutter</span>
+                            <span class="project-tag">Health</span>
+                        </div>
+                        <h3>Fitness Tracker App</h3>
+                        <p>Cross-platform mobile application for tracking workouts, nutrition, and health metrics with beautiful data visualisation.</p>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fab fa-apple"></i> App Store</a>
+                            <a href="#" class="project-link"><i class="fab fa-google-play"></i> Play Store</a>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- Project 1 -->
-        <article class="project-card reveal" data-tags="web design ecommerce react" data-title="E-Commerce Platform">
-            <span class="card-featured-badge">Featured</span>
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&q=80&auto=format" alt="E-Commerce Platform screenshot" class="project-image" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">Web</span>
-                    <span class="project-tag">E-Commerce</span>
-                    <span class="project-tag">React</span>
+                <!-- Project 3 -->
+                <div class="project-card" data-tags="web design" data-title="analytics dashboard">
+                    <div class="project-image-wrap">
+                        <img src="https://via.placeholder.com/600x400/1e1e1e/00a8ff?text=Analytics+Dashboard" alt="Analytics Dashboard" loading="lazy">
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="project-tag">UI/UX Design</span>
+                            <span class="project-tag">Dashboard</span>
+                            <span class="project-tag">Vue.js</span>
+                        </div>
+                        <h3>Business Analytics Dashboard</h3>
+                        <p>Interactive data visualisation platform with real-time updates and customisable reporting features for enterprise clients.</p>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            <a href="#" class="project-link"><i class="fas fa-palette"></i> Case Study</a>
+                        </div>
+                    </div>
                 </div>
-                <h3>E-Commerce Platform</h3>
-                <p>A full-featured online store with product management, cart functionality, and secure payment processing built with React and Node.js.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-                    <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                </div>
-            </div>
-        </article>
 
-        <!-- Project 2 -->
-        <article class="project-card reveal reveal-delay-1" data-tags="mobile flutter health" data-title="Fitness Tracker App">
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80&auto=format" alt="Fitness Tracker App screenshot" class="project-image" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">Mobile</span>
-                    <span class="project-tag">Flutter</span>
-                    <span class="project-tag">Health</span>
+                <!-- Project 4 -->
+                <div class="project-card" data-tags="cloud" data-title="enterprise cloud migration">
+                    <div class="project-image-wrap">
+                        <img src="https://via.placeholder.com/600x400/1e1e1e/0077b6?text=Cloud+Migration" alt="Cloud Migration" loading="lazy">
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="project-tag">Cloud</span>
+                            <span class="project-tag">AWS</span>
+                            <span class="project-tag">DevOps</span>
+                        </div>
+                        <h3>Enterprise Cloud Migration</h3>
+                        <p>Seamless transition of legacy systems to cloud infrastructure with zero downtime for a financial services client.</p>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-file-alt"></i> Case Study</a>
+                        </div>
+                    </div>
                 </div>
-                <h3>Fitness Tracker App</h3>
-                <p>Cross-platform mobile app for tracking workouts, nutrition, and health metrics with beautiful data visualisations and wearable integration.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fab fa-apple"></i> App Store</a>
-                    <a href="#" class="project-link"><i class="fab fa-google-play"></i> Play Store</a>
-                </div>
-            </div>
-        </article>
 
-        <!-- Project 3 -->
-        <article class="project-card reveal reveal-delay-2" data-tags="web design dashboard vuejs" data-title="Business Analytics Dashboard">
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80&auto=format" alt="Analytics Dashboard screenshot" class="project-image" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">Design</span>
-                    <span class="project-tag">Dashboard</span>
-                    <span class="project-tag">Vue.js</span>
+                <!-- Project 5 -->
+                <div class="project-card" data-tags="ai" data-title="customer support ai">
+                    <div class="project-image-wrap">
+                        <img src="https://via.placeholder.com/600x400/1e1e1e/0097e6?text=AI+Chatbot" alt="AI Chatbot" loading="lazy">
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="project-tag">AI</span>
+                            <span class="project-tag">NLP</span>
+                            <span class="project-tag">Python</span>
+                        </div>
+                        <h3>Customer Support AI</h3>
+                        <p>Natural language processing chatbot that autonomously handles over 80% of customer inquiries without human intervention.</p>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
+                            <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+                        </div>
+                    </div>
                 </div>
-                <h3>Business Analytics Dashboard</h3>
-                <p>Interactive data visualisation platform with real-time KPI updates, customisable reports, and role-based access for enterprise clients.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-                    <a href="#" class="project-link"><i class="fas fa-palette"></i> Case Study</a>
-                </div>
-            </div>
-        </article>
 
-        <!-- Project 4 -->
-        <article class="project-card reveal reveal-delay-3" data-tags="cloud aws devops" data-title="Enterprise Cloud Migration">
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80&auto=format" alt="Cloud Migration project" class="project-image" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">Cloud</span>
-                    <span class="project-tag">AWS</span>
-                    <span class="project-tag">DevOps</span>
+                <!-- Project 6 -->
+                <div class="project-card" data-tags="web" data-title="supply chain blockchain">
+                    <div class="project-image-wrap">
+                        <img src="https://via.placeholder.com/600x400/1e1e1e/00a8ff?text=Blockchain" alt="Blockchain Platform" loading="lazy">
+                    </div>
+                    <div class="project-body">
+                        <div class="project-tags">
+                            <span class="project-tag">Blockchain</span>
+                            <span class="project-tag">Smart Contracts</span>
+                            <span class="project-tag">Solidity</span>
+                        </div>
+                        <h3>Supply Chain Blockchain</h3>
+                        <p>Decentralised platform for tracking goods through a supply chain with immutable verification at every step.</p>
+                        <div class="project-links">
+                            <a href="#" class="project-link"><i class="fas fa-file-alt"></i> White Paper</a>
+                        </div>
+                    </div>
                 </div>
-                <h3>Enterprise Cloud Migration</h3>
-                <p>Seamless migration of legacy on-premise systems to AWS cloud infrastructure with zero downtime for a financial services client.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fas fa-file-alt"></i> Case Study</a>
-                </div>
-            </div>
-        </article>
 
-        <!-- Project 5 -->
-        <article class="project-card reveal" data-tags="ai nlp python" data-title="Customer Support AI">
-            <span class="card-featured-badge">Featured</span>
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=600&q=80&auto=format" alt="AI Chatbot project" class="project-image" loading="lazy">
             </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">AI</span>
-                    <span class="project-tag">NLP</span>
-                    <span class="project-tag">Python</span>
-                </div>
-                <h3>Customer Support AI</h3>
-                <p>NLP-powered chatbot that autonomously handles 80% of customer inquiries, integrated with existing CRM and ticketing systems.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fas fa-external-link-alt"></i> Live Demo</a>
-                    <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
-                </div>
-            </div>
-        </article>
 
-        <!-- Project 6 -->
-        <article class="project-card reveal reveal-delay-1" data-tags="web blockchain solidity" data-title="Supply Chain Blockchain">
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=600&q=80&auto=format" alt="Blockchain project" class="project-image" loading="lazy">
+            <!-- Shown when no cards match the filter/search -->
+            <div class="no-results" id="no-results" aria-live="polite">
+                <h3>No projects found</h3>
+                <p>Try adjusting your search or filter criteria.</p>
             </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">Blockchain</span>
-                    <span class="project-tag">Smart Contracts</span>
-                    <span class="project-tag">Solidity</span>
-                </div>
-                <h3>Supply Chain Blockchain</h3>
-                <p>Decentralised platform for tracking goods through the supply chain with immutable verification at every step via smart contracts.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fas fa-file-alt"></i> White Paper</a>
-                </div>
-            </div>
-        </article>
+        </section>
 
-        <!-- Project 7 -->
-        <article class="project-card reveal reveal-delay-2" data-tags="mobile design ui" data-title="HealthCare Patient App">
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80&auto=format" alt="HealthCare App" class="project-image" loading="lazy">
-            </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">Mobile</span>
-                    <span class="project-tag">Design</span>
-                    <span class="project-tag">React Native</span>
-                </div>
-                <h3>HealthCare Patient App</h3>
-                <p>Patient-facing mobile app for appointment booking, medical record access, and teleconsultation with real-time video capabilities.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fab fa-apple"></i> App Store</a>
-                    <a href="#" class="project-link"><i class="fas fa-palette"></i> Case Study</a>
-                </div>
-            </div>
-        </article>
+    </main>
 
-        <!-- Project 8 -->
-        <article class="project-card reveal reveal-delay-3" data-tags="ai cloud machine learning" data-title="Predictive Analytics Engine">
-            <div class="project-image-wrap">
-                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80&auto=format" alt="Predictive Analytics" class="project-image" loading="lazy">
+    <!-- ── Footer ─────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="icon ion-md-mail"></i> dcodedevs@gmail.com</p>
+                <p><i class="icon ion-md-call"></i> +254-768-372532</p>
+                <p><i class="icon ion-md-pin"></i>  Nairobi, Kenya</p>
             </div>
-            <div class="project-body">
-                <div class="project-tags">
-                    <span class="project-tag">AI</span>
-                    <span class="project-tag">Cloud</span>
-                    <span class="project-tag">ML</span>
-                </div>
-                <h3>Predictive Analytics Engine</h3>
-                <p>Machine learning pipeline that forecasts inventory demand with 94% accuracy, reducing overstock costs by 40% for a retail chain.</p>
-                <div class="project-links">
-                    <a href="#" class="project-link"><i class="fas fa-file-alt"></i> Case Study</a>
-                    <a href="#" class="project-link"><i class="fab fa-github"></i> Code</a>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="index.html">   <i class="icon ion-md-home"></i> Home</a>
+                <a href="projects.html"><i class="icon ion-md-code-working"></i> Projects</a>
+                <a href="contact.html"> <i class="icon ion-md-mail"></i> Contact Us</a>
+                <a href="about.html">   <i class="icon ion-md-information-circle"></i> About Us</a>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-icons">
+                    <a href="#" aria-label="Facebook"> <i class="icon ion-logo-facebook"></i></a>
+                    <a href="#" aria-label="Twitter">  <i class="icon ion-logo-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"> <i class="icon ion-logo-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="icon ion-logo-instagram"></i></a>
+                    <a href="#" aria-label="GitHub">   <i class="icon ion-logo-github"></i></a>
                 </div>
             </div>
-        </article>
+        </div>
+        <div class="copyright">&copy; <span id="year"></span> DCODE. All Rights Reserved. Powered by Dave</div>
+    </footer>
 
-        <!-- No results placeholder -->
-        <div class="no-results" id="no-results" aria-live="polite">
-            <i class="fas fa-search" aria-hidden="true"></i>
-            <h3>No projects found</h3>
-            <p>Try adjusting your search term or filter.</p>
+    <!-- ── Chatbot ─────────────────────────────────────────── -->
+    <button class="chatbot-btn" aria-label="Open chat assistant">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+    <div class="chatbot-container" role="dialog" aria-label="DCODE Chat Assistant">
+        <div class="chatbot-header">
+            <i class="fas fa-robot"></i>
+            <h3>DCODE Assistant</h3>
+            <button class="chatbot-close" aria-label="Close chat"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input-field" placeholder="Ask me anything…" autocomplete="off">
+            <button class="chatbot-send" aria-label="Send"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
-</main>
 
-<!-- Footer -->
-<footer>
-    <div class="footer-content">
-        <div class="footer-section">
-            <h3>Contact Us</h3>
-            <p><i class="icon ion-md-mail"></i> dcodedevs@gmail.com</p>
-            <p><i class="icon ion-md-call"></i> +254-768-372532</p>
-            <p><i class="icon ion-md-pin"></i> Nairobi, Kenya</p>
-        </div>
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <a href="index.html"><i class="icon ion-md-home"></i> Home</a>
-            <a href="projects.html"><i class="icon ion-md-code-working"></i> Projects</a>
-            <a href="contact.html"><i class="icon ion-md-mail"></i> Contact Us</a>
-            <a href="about.html"><i class="icon ion-md-information-circle"></i> About Us</a>
-        </div>
-        <div class="footer-section">
-            <h3>Connect With Us</h3>
-            <div class="social-icons">
-                <a href="#" aria-label="Facebook"><i class="icon ion-logo-facebook"></i></a>
-                <a href="#" aria-label="Twitter"><i class="icon ion-logo-twitter"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="icon ion-logo-linkedin"></i></a>
-                <a href="#" aria-label="Instagram"><i class="icon ion-logo-instagram"></i></a>
-                <a href="#" aria-label="GitHub"><i class="icon ion-logo-github"></i></a>
-            </div>
-        </div>
-    </div>
-    <div class="copyright">&copy; <span id="year"></span> DCODE. All Rights Reserved. Powered by Dave</div>
-</footer>
+    <!-- ✅ Shared JS (nav, chatbot) -->
+    <script src="main.js"></script>
 
-<button id="scrollTop" aria-label="Scroll to top"><i class="fas fa-chevron-up"></i></button>
+    <!-- Projects page: filter + search logic -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards      = document.querySelectorAll('.project-card');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const searchEl   = document.getElementById('project-search');
+        const noResults  = document.getElementById('no-results');
 
-<script src="main.js"></script>
-<script>
-(function () {
-    'use strict';
-
-    var cards        = Array.from(document.querySelectorAll('.project-card[data-title]'));
-    var searchInput  = document.getElementById('project-search');
-    var clearBtn     = document.getElementById('search-clear');
-    var filterBtns   = document.querySelectorAll('.filter-btn');
-    var sortSelect   = document.getElementById('sort-select');
-    var noResults    = document.getElementById('no-results');
-    var resultsCount = document.getElementById('results-count');
-    var grid         = document.getElementById('projects-container');
-
-    var activeFilter = 'all';
-    var searchTerm   = '';
-    var sortOrder    = 'default';
-
-    /* Store original DOM order for 'default' sort */
-    var originalOrder = cards.slice();
-
-    function debounce(fn, wait) {
-        var t;
-        return function () {
-            var args = arguments;
-            clearTimeout(t);
-            t = setTimeout(function () { fn.apply(null, args); }, wait);
-        };
-    }
-
-    function getCardTitle(card) { return card.dataset.title || ''; }
-    function getCardTags(card)  { return card.dataset.tags  || ''; }
-
-    function getSortedCards() {
-        var list = cards.slice();
-        if (sortOrder === 'az') {
-            list.sort(function (a, b) { return getCardTitle(a).localeCompare(getCardTitle(b)); });
-        } else if (sortOrder === 'za') {
-            list.sort(function (a, b) { return getCardTitle(b).localeCompare(getCardTitle(a)); });
-        } else {
-            list = originalOrder.slice();
+        /* Debounce helper — avoids filtering on every single keypress */
+        function debounce(fn, wait = 220) {
+            let t;
+            return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
         }
-        return list;
-    }
 
-    function applyFilters() {
-        var sorted  = getSortedCards();
-        var visible = 0;
+        /* Core filter function */
+        function filterProjects(category = 'all', term = '') {
+            let visible = 0;
+            cards.forEach(card => {
+                const tags  = card.dataset.tags.toLowerCase();
+                const title = card.dataset.title.toLowerCase();
+                const text  = card.textContent.toLowerCase();
 
-        /* Re-order DOM nodes */
-        sorted.forEach(function (card) {
-            if (card !== noResults) grid.appendChild(card);
-        });
+                const matchesCat    = category === 'all' || tags.includes(category);
+                const matchesSearch = !term || title.includes(term) || tags.includes(term) || text.includes(term);
 
-        sorted.forEach(function (card) {
-            var title = getCardTitle(card).toLowerCase();
-            var tags  = getCardTags(card).toLowerCase();
-            var text  = card.textContent.toLowerCase();
-
-            var matchFilter = activeFilter === 'all' || tags.includes(activeFilter);
-            var matchSearch = searchTerm === '' ||
-                              title.includes(searchTerm) ||
-                              tags.includes(searchTerm)  ||
-                              text.includes(searchTerm);
-
-            var show = matchFilter && matchSearch;
-            card.classList.toggle('hidden', !show);
-            if (show) visible++;
-        });
-
-        /* No-results message */
-        noResults.style.display = visible === 0 ? 'block' : 'none';
-
-        /* Results count */
-        var total = cards.length;
-        if (visible === total && searchTerm === '' && activeFilter === 'all') {
-            resultsCount.textContent = 'Showing all ' + total + ' projects';
-        } else {
-            resultsCount.textContent = 'Showing ' + visible + ' of ' + total + ' projects';
-        }
-    }
-
-    /* Search */
-    searchInput.addEventListener('input', debounce(function () {
-        searchTerm = searchInput.value.trim().toLowerCase();
-        clearBtn.style.display = searchTerm ? 'block' : 'none';
-        applyFilters();
-    }, 200));
-
-    /* Clear */
-    clearBtn.addEventListener('click', function () {
-        searchInput.value = '';
-        searchTerm = '';
-        clearBtn.style.display = 'none';
-        searchInput.focus();
-        applyFilters();
-    });
-
-    /* Filter buttons */
-    filterBtns.forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            filterBtns.forEach(function (b) {
-                b.classList.remove('active');
-                b.setAttribute('aria-pressed', 'false');
+                const show = matchesCat && matchesSearch;
+                card.style.display = show ? 'flex' : 'none';
+                if (show) visible++;
             });
-            btn.classList.add('active');
-            btn.setAttribute('aria-pressed', 'true');
-            activeFilter = btn.dataset.filter;
-            applyFilters();
+            noResults.style.display = visible === 0 ? 'block' : 'none';
+        }
+
+        /* Filter button clicks */
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+                btn.classList.add('active');
+                btn.setAttribute('aria-pressed', 'true');
+                filterProjects(btn.dataset.filter, searchEl.value.toLowerCase());
+            });
+            /* Keyboard: space / enter */
+            btn.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); btn.click(); } });
         });
 
-        btn.addEventListener('keydown', function (e) {
-            if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); btn.click(); }
-        });
-    });
+        /* Debounced search input */
+        searchEl.addEventListener('input', debounce(() => {
+            const active = document.querySelector('.filter-btn.active');
+            filterProjects(active?.dataset.filter || 'all', searchEl.value.toLowerCase());
+        }));
 
-    /* Sort */
-    sortSelect.addEventListener('change', function () {
-        sortOrder = sortSelect.value;
-        applyFilters();
+        /* Initial render */
+        filterProjects('all');
     });
-
-    /* Init */
-    applyFilters();
-}());
-</script>
+    </script>
 </body>
 </html>
